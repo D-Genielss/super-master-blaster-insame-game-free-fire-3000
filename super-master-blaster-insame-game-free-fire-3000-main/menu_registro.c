@@ -97,7 +97,7 @@ void Adicionar_Palavra(Pergunta **Lista, size_t *Tamanho) {
 
     // Validar dificuldade
     do {
-        printf("Digite um nível de dificuldade (1 a 5): ");
+        printf("Digite um nível de dificuldade (1 a 2): ");
         if (scanf("%d", &(*Lista)[*Tamanho].dificuldade) != 1) {
             printf("Entrada inválida!\n");
             while (getchar() != '\n'); // limpa buffer
@@ -105,10 +105,10 @@ void Adicionar_Palavra(Pergunta **Lista, size_t *Tamanho) {
         }
         getchar(); // limpa o buffer
         
-        if ((*Lista)[*Tamanho].dificuldade < 1 || (*Lista)[*Tamanho].dificuldade > 5) {
-            printf("Dificuldade deve ser entre 1 e 5!\n");
+        if ((*Lista)[*Tamanho].dificuldade < 1 || (*Lista)[*Tamanho].dificuldade > 2) {
+            printf("Dificuldade deve ser entre 1 e 2!\n");
         }
-    } while ((*Lista)[*Tamanho].dificuldade < 1 || (*Lista)[*Tamanho].dificuldade > 5);
+    } while ((*Lista)[*Tamanho].dificuldade < 1 || (*Lista)[*Tamanho].dificuldade > 2);
 
     (*Tamanho)++;
     printf("A sua palavra foi adicionada com sucesso!\n");
@@ -168,7 +168,7 @@ void Alterar_Palavra(Pergunta *Lista, size_t Tamanho) {
 
     // Validar nova dificuldade
     do {
-        printf("Digite o novo nível de dificuldade (1 a 5): ");
+        printf("Digite o novo nível de dificuldade (1 a 2): ");
         if (scanf("%d", &Lista[indice].dificuldade) != 1) {
             printf("Entrada inválida!\n");
             while (getchar() != '\n');
@@ -176,10 +176,10 @@ void Alterar_Palavra(Pergunta *Lista, size_t Tamanho) {
         }
         getchar();
         
-        if (Lista[indice].dificuldade < 1 || Lista[indice].dificuldade > 5) {
-            printf("Dificuldade deve ser entre 1 e 5!\n");
+        if (Lista[indice].dificuldade < 1 || Lista[indice].dificuldade > 2) {
+            printf("Dificuldade deve ser entre 1 e 2!\n");
         }
-    } while (Lista[indice].dificuldade < 1 || Lista[indice].dificuldade > 5);
+    } while (Lista[indice].dificuldade < 1 || Lista[indice].dificuldade > 2);
 
     printf("Palavra alterada com sucesso!\n");
 }
@@ -291,7 +291,8 @@ void Salvar_Palavras(Pergunta *Lista, size_t Tamanho) {
     fclose(arquivo);
 }
 
-void Exportar_Arquivo(Pergunta Lista[], size_t Tamanho){
+void Exportar_Arquivo(Pergunta Lista[], size_t Tamanho) {
+    // Exportar para arquivo único (mantendo a função original)
     FILE* arquivo = fopen("Palavras.csv", "w");
     if (arquivo == NULL){
         perror("Erro ao abrir o arquivo");
@@ -302,7 +303,52 @@ void Exportar_Arquivo(Pergunta Lista[], size_t Tamanho){
     for (size_t i = 0; i < Tamanho; i++) {
         fprintf(arquivo, "%s,%s,%d\n", Lista[i].palavra, Lista[i].dica, Lista[i].dificuldade);
     }
-
     fclose(arquivo);
-    printf("Arquivo salvo com sucesso\n");
+    printf("Arquivo Palavras.csv salvo com sucesso!\n");
+
+    // Criar arquivos separados por dificuldade
+    Exportar_Por_Dificuldade(Lista, Tamanho);
+}
+
+// Nova função para exportar por dificuldade
+void Exportar_Por_Dificuldade(Pergunta Lista[], size_t Tamanho) {
+    FILE* arquivo_dificuldade1 = fopen("Palavras_Dificuldade1.csv", "w");
+    FILE* arquivo_dificuldade2 = fopen("Palavras_Dificuldade2.csv", "w");
+    
+    if (arquivo_dificuldade1 == NULL || arquivo_dificuldade2 == NULL) {
+        perror("Erro ao abrir os arquivos de dificuldade");
+        if (arquivo_dificuldade1) fclose(arquivo_dificuldade1);
+        if (arquivo_dificuldade2) fclose(arquivo_dificuldade2);
+        return;
+    }
+
+    // Cabeçalhos dos arquivos
+    fprintf(arquivo_dificuldade1, "Palavra,Dica,Dificuldade\n");
+    fprintf(arquivo_dificuldade2, "Palavra,Dica,Dificuldade\n");
+
+    int count_dificuldade1 = 0;
+    int count_dificuldade2 = 0;
+
+    // Filtrar e salvar palavras por dificuldade
+    for (size_t i = 0; i < Tamanho; i++) {
+        int tamanho_palavra = strlen(Lista[i].palavra);
+        
+        if (Lista[i].dificuldade == 1 && tamanho_palavra <= 5) {
+            fprintf(arquivo_dificuldade1, "%s,%s,%d\n", 
+                   Lista[i].palavra, Lista[i].dica, Lista[i].dificuldade);
+            count_dificuldade1++;
+        }
+        else if (Lista[i].dificuldade == 2 && tamanho_palavra <= 9) {
+            fprintf(arquivo_dificuldade2, "%s,%s,%d\n", 
+                   Lista[i].palavra, Lista[i].dica, Lista[i].dificuldade);
+            count_dificuldade2++;
+        }
+    }
+
+    fclose(arquivo_dificuldade1);
+    fclose(arquivo_dificuldade2);
+
+    printf("Arquivos por dificuldade criados com sucesso!\n");
+    printf("- Palavras_Dificuldade1.csv: %d palavras (dificuldade 1, até 5 letras)\n", count_dificuldade1);
+    printf("- Palavras_Dificuldade2.csv: %d palavras (dificuldade 2, até 9 letras)\n", count_dificuldade2);
 }
