@@ -19,5 +19,6 @@ void Converte_Maiusculo(char *Palavra);
 void Carregar_Palavras(Pergunta **Lista, size_t *Tamanho);
 void Salvar_Palavras(Pergunta *Lista, size_t Tamanho);
 void Exportar_Arquivo(Pergunta Lista[], size_t Tamanho);
+void Exportar_Por_Dificuldade(Pergunta Lista[], size_t Tamanho);
 
 #endif // MENU_REGISTRO_H
