@@ -2,8 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-
-
+#include "menu_registro.h"
 
 int ContaLinhas(FILE *arquivo){
 char c;
@@ -65,11 +64,10 @@ printf("%d",aleatorio);
 fclose(arquivo);
 }
 
-
-int main(){
-    char palavra[30];
-    char dica[30];
-Procurar(palavra,dica);
-printf("\n%s\n",palavra);
-printf("%s\n",dica);
-}
+// int main(){
+//     char palavra[30];
+//     char dica[30];
+// Procurar(palavra,dica);
+// printf("\n%s\n",palavra);
+// printf("%s\n",dica);
+// }
