@@ -62,6 +62,33 @@ void raylib(){
                     while (!WindowShouldClose()){
                         BeginDrawing();
                             ClearBackground(BLACK);
+                            //Adicionar
+                            DrawRectangle(50,111,400,100,DARKPURPLE);
+                            DrawText("Adicionar",60,140,40 ,WHITE);
+
+                            //Listar
+                            DrawRectangle(50,222,400,100,DARKPURPLE);
+                            DrawText("Listar",60,251,40 ,WHITE);
+
+                            //Pesquisar
+                            DrawRectangle(50,333,400,100,DARKPURPLE);
+                            DrawText("Pesquisar",60,362,40 ,WHITE);
+
+                            //Alterar
+                            DrawRectangle(50,444,400,100,DARKPURPLE);
+                            DrawText("Alterar",60,473,40 ,WHITE);
+
+                            //Excluir
+                            DrawRectangle(50,555,400,100,DARKPURPLE);
+                            DrawText("Excluir",60,584,40 ,WHITE);
+
+                            //Exportar
+                            DrawRectangle(50,666,400,100,DARKPURPLE);
+                            DrawText("Exportar",60,695,40 ,WHITE);
+
+                            //Sair
+                            DrawRectangle(50,777,400,100,DARKPURPLE);
+                            DrawText("Sair",60,806,40 ,WHITE);
 
                             
                             if(!WindowShouldClose()){
