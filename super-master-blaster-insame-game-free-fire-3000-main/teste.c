@@ -2,72 +2,67 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#include "menu_registro.h"
 
 int ContaLinhas(FILE *arquivo){
-char c;
-int linhas = 1;
+    char c;
+    int linhas = 0;
 
-while ((c = fgetc(arquivo)) != EOF)
-{
-    if (c == '\n')
-    {
-        linhas++;
+    while ((c = fgetc(arquivo)) != EOF)
+        if (c == '\n') linhas++;
+
+    fseek(arquivo, 0, SEEK_SET);
+    return linhas;
+}
+
+int Aleatorio(int linhas){
+    srand(time(NULL));
+    return (rand() % linhas) + 1;
+}
+
+
+void Procurar(char palavra[][30], char dica[][30]){
+    int contador = 0;
+
+    FILE *arquivo = fopen("../output/Palavras.csv","r");
+    if(!arquivo){
+        printf("Erro ao abrir o arquivo!\n");
+        exit(1);
     }
+
+    while (fscanf(arquivo, "%[^,],%[^,],%*s\n", palavra[contador], dica[contador]) == 2) {
+        contador++;
+    }
+
+    fclose(arquivo);
 }
-fseek(arquivo,0,0);
-return(linhas);
-}
 
-
-void Procurar(char palavra[],char dica[]){
-
+int main(){
     int linhas;
-    int linhas2 = 0;
+    int contador = 0;
     int aleatorio;
-    int c;
 
-
-
-FILE *arquivo = fopen("../output/Palavras.csv","r");
-
-if(arquivo == NULL){
-printf("Erro ao abrir o arquivo!\n");
-exit(1);// 1 significa erro
-}
-
-linhas = ContaLinhas(arquivo);
-
-srand(time(NULL));
-while (aleatorio <= 0 ){
-aleatorio = (rand()%linhas);
-aleatorio--;
-}
-
-
-while ((c = fgetc(arquivo)) != EOF)
-{
-    if (c == '\n')
-    {
-        linhas2++;
-        if (linhas2 == aleatorio)
-        {
-            fscanf(arquivo,"%[^,],%[^,]",palavra,dica);
-            break;
-        }
-        
+    FILE *arquivo = fopen("../output/Palavras.csv","r");
+    if(!arquivo){
+        printf("Erro ao abrir o arquivo!\n");
+        exit(1);
     }
+
+    linhas = ContaLinhas(arquivo);
+    fclose(arquivo);
+
+    char palavra[linhas][30];
+    char dica[linhas][30];
+
+    Procurar(palavra, dica);
+
+    while (contador < linhas){
+        printf("%s, %s\n", palavra[contador], dica[contador]);
+        contador++;
+    }
+
+    aleatorio = Aleatorio(linhas);
+    printf("%d",aleatorio);
+        printf("%d",linhas);
+
+    return 0;
 }
-
-printf("%d",aleatorio);
-
-fclose(arquivo);
-}
-
-// int main(){
-//     char palavra[30];
-//     char dica[30];
-// Procurar(palavra,dica);
-// printf("\n%s\n",palavra);
-// printf("%s\n",dica);
-// }
