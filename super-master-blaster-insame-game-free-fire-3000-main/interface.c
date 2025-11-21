@@ -54,32 +54,55 @@ while (!WindowShouldClose()){
         if(TelaComecar == true){
 
             while(!WindowShouldClose()){
+
                 if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
                     Vector2 mousePosition = GetMousePosition();
 
-                    if (CheckCollisionPointRec(mousePosition,B_D1)){
+                    if (CheckCollisionPointRec(mousePosition,B_D1) && TelaComecar == false){
                         TelaD1 = true;
                     }
-                    if (CheckCollisionPointRec(mousePosition,B_D2)){
+                    if (CheckCollisionPointRec(mousePosition,B_D2) && TelaComecar == false){
                         TelaD2 = true;
                     }
                 }//testa botao telas dificuldades
-                    
+   
                 BeginDrawing();
 
                 ClearBackground(BLACK);
 
                 DrawText("ESCOLHA A DIFICULDADE",450,200,50 ,WHITE);
-         //dificuldade 1
+            //dificuldade 1
                 DrawRectangle(360,410,440,120,GREEN);
                 DrawRectangle(370,420,420,100,BLACK);
                 DrawText("DIFICULDADE 1",380,445,50 ,GREEN);
+//tela dificulade 1 /game facil                 
                 if(TelaD1 == true){
                     while(!WindowShouldClose()){
+
+                  int key = GetCharPressed();
+                    int letterCount = 0;
+                    char palavra[5];
+                                          
+                        if ((key >= 32) && (key <= 125) && (letterCount < 4)){
+                        palavra[letterCount] = (char)key;
+                        palavra[letterCount+1] = '\0';
+                        letterCount++;
+                        }
+
+                        if (IsKeyPressed(KEY_BACKSPACE)){
+                            if (letterCount > 0){
+                                letterCount--;
+                                palavra[letterCount] = '\0';
+                            }
+                        }
+                
                         BeginDrawing();
 
                             ClearBackground(BLACK);
                             DrawText("JOGO DIFICULDADE 1",450,200,50 ,GREEN);
+
+                            //DrawText(palavra, 460, 400, 40, GREEN);
+                            DrawRectangle(450, 540, 200, 2, GREEN);
 
                         EndDrawing();
                     if (!WindowShouldClose()){TelaD1 = false;}//if fechar tela
@@ -90,6 +113,7 @@ while (!WindowShouldClose()){
                 DrawRectangle(860,410,440,120,YELLOW);
                 DrawRectangle(870,420,420,100,BLACK);
                 DrawText("DIFICULDADE 2",880,445,50 ,YELLOW);
+//tela dificuldade 2 /game medio
                 if(TelaD2 == true){
                     while(!WindowShouldClose()){
                         BeginDrawing();
