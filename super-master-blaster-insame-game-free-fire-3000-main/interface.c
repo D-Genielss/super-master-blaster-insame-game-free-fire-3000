@@ -1,11 +1,15 @@
 #include "../include/raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-    
+#include <string.h>   
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
+typedef enum {
+    COLOCA_PALAVRA,
+    TELA_GAME_RODANDO
+} Tela_Jogo;
+
 void raylib(){
     // Inicialização
     const int screenWidth = 1600;
@@ -77,34 +81,60 @@ while (!WindowShouldClose()){
                 DrawText("DIFICULDADE 1",380,445,50 ,GREEN);
 //tela dificulade 1 /game facil                 
                 if(TelaD1 == true){
-                    while(!WindowShouldClose()){
+                        int tamanho = 0;
+                        char Palavra[6];
+                        Tela_Jogo TELA_MOMENTO = COLOCA_PALAVRA;
+               
+                    while(!WindowShouldClose()){                 
+                        
+                        switch(TELA_MOMENTO){
+                            
+                            case COLOCA_PALAVRA:{
 
-                  int key = GetCharPressed();
-                    int letterCount = 0;
-                    char palavra[5];
-                                          
-                        if ((key >= 32) && (key <= 125) && (letterCount < 4)){
-                        palavra[letterCount] = (char)key;
-                        palavra[letterCount+1] = '\0';
-                        letterCount++;
-                        }
+                                int key = GetCharPressed();
 
-                        if (IsKeyPressed(KEY_BACKSPACE)){
-                            if (letterCount > 0){
-                                letterCount--;
-                                palavra[letterCount] = '\0';
-                            }
+                                if((key >= 32) && (key <= 125) && (tamanho < 5)){
+                                    Palavra[tamanho] = (char)key;
+                                    Palavra[tamanho+1] = '\0';
+                                    tamanho++;
+                                }
+                                if (IsKeyPressed(KEY_BACKSPACE)){
+                                    if (tamanho > 0){
+                                        tamanho--;
+                                        Palavra[tamanho] = '\0';
+                                    }
+                                }
+                               if (IsKeyPressed(KEY_ENTER)){
+                                    TELA_MOMENTO = TELA_GAME_RODANDO;
+                                }
+                                                   
+                            }break;
+                            case TELA_GAME_RODANDO:{
+                                
+                            } break;
+                            default: break;
                         }
-                
+//switch tela game
                         BeginDrawing();
+                            switch(TELA_MOMENTO){
 
-                            ClearBackground(BLACK);
-                            DrawText("JOGO DIFICULDADE 1",450,200,50 ,GREEN);
+                                case COLOCA_PALAVRA:{
 
-                            //DrawText(palavra, 460, 400, 40, GREEN);
-                            DrawRectangle(450, 540, 200, 2, GREEN);
+                                    ClearBackground(BLACK);
+                                    DrawText("JOGO DIFICULDADE 1",450,200,50 ,GREEN);
+                                    DrawText(Palavra, 460, 400, 40, GREEN);
+                                    DrawRectangle(450, 540, 200, 2, GREEN);
 
+                                }break;
+
+                                case TELA_GAME_RODANDO:{
+                                    
+                                }break;
+
+                                default: break;
+                            }
                         EndDrawing();
+
                     if (!WindowShouldClose()){TelaD1 = false;}//if fechar tela
                     }//while Tela dificuldade 1
                 }//if Tela dificuldade 1
@@ -121,6 +151,7 @@ while (!WindowShouldClose()){
                         ClearBackground(BLACK);
                         DrawText("JOGO DIFICULDADE 2",450,200,50 ,YELLOW);
 
+                        
                         EndDrawing();
                     if (!WindowShouldClose()){TelaD2 = false;}//if fechar tela
                     }//while Tela dificuldade 2
