@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>   
-#include <ctype.h> // Adicionei esta linha para usar toupper()
-#include "../include/teste.h"
+#include <ctype.h>
+#include <time.h>
 
 void DrawChar(char c, int posX, int posY, int fontSize, Color color) {
     char text[2] = {c, '\0'};
@@ -17,6 +17,62 @@ typedef enum {
     COLOCA_PALAVRA,
     TELA_GAME_RODANDO
 } Tela_Jogo;
+
+// FUNÇÕES INCLUÍDAS
+int ContaLinhas(FILE *arquivo){
+    char c;
+    int linhas = 0;
+
+    while ((c = fgetc(arquivo)) != EOF){
+        if (c == '\n') 
+        linhas++;
+    }
+
+    fseek(arquivo, 0, SEEK_SET);
+    return linhas;
+}
+
+int Aleatorio(int linhas){
+    srand(time(NULL));
+    return (rand() % linhas) + 1;
+}
+
+void Juntar(FILE *arquivo, char palavra[][30], char dica[][30]){
+    int contador = 0;
+
+    while (fscanf(arquivo, "%[^,],%[^,],%*s\n", palavra[contador], dica[contador]) != EOF) {
+        contador++;
+    }
+}
+
+int comparar(char descobrir[6], char palavra[][30], int linhas) {
+    for (int i = 0; i < linhas; i++) {
+        if (strcmp(descobrir, palavra[i]) == 0) {
+            return 1;   // TRUE → encontrou
+        }
+    }
+    return 0;           // FALSE → não encontrou
+}
+
+void compararLetras(char palavra[][30], int aleatorio, char descobrir[6], int resultado[5]) {
+    for (int i = 0; i < 5; i++) {
+        if (descobrir[i] == palavra[aleatorio][i]) {
+            resultado[i] = 2; // letra certa no lugar certo
+        } else {
+            int encontrou = 0;
+            for (int j = 0; j < 5; j++) {
+                if (descobrir[i] != '\0' && descobrir[i] == palavra[aleatorio][j]) {
+                    resultado[i] = 1; // letra existe mas em posição diferente
+                    encontrou = 1;
+                    break;
+                }
+            }
+            if (!encontrou) {
+                resultado[i] = 0;  // não existe
+            }
+        }
+    }
+}
 
 void raylib(){
 
