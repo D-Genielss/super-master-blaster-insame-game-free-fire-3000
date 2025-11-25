@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>   
+#include <ctype.h> // Adicionei esta linha para usar toupper()
 #include "../include/teste.h"
 
 void DrawChar(char c, int posX, int posY, int fontSize, Color color) {
@@ -156,6 +157,10 @@ while (!WindowShouldClose()){
                                     }
                                 }
                                if (IsKeyPressed(KEY_ENTER)){
+                                    // CONVERTE A PALAVRA PARA MAIÚSCULO APÓS O ENTER
+                                    for(int i = 0; i < tamanho; i++) {
+                                        Palavra[i] = toupper(Palavra[i]);
+                                    }
                                     TELA_MOMENTO = TELA_GAME_RODANDO;
                                 }
 
