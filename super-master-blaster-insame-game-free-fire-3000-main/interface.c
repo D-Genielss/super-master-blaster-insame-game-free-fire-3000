@@ -184,6 +184,7 @@ while (!WindowShouldClose()){
                                 ClearBackground(BLACK);
 
                                 DrawText("Victoria",450,50,50 ,GREEN);
+                                aleatorio = Aleatorio(linhas);
 
                                 EndDrawing();
 
