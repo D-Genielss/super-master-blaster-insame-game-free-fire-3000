@@ -31,6 +31,35 @@ void Juntar(FILE *arquivo, char palavra[][30], char dica[][30]){
 
 }
 
+int comparar(char descobrir[6], char palavra[][6], int linhas) {
+    for (int i = 0; i < linhas; i++) {
+        if (strcmp(descobrir, palavra[i]) == 0) {
+            return 1;   // TRUE → encontrou
+        }
+    }
+    return 0;           // FALSE → não encontrou
+}
+
+
+    for (int i = 0; i < 5; i++) {
+        if (descobrir[i] == palavra[aleatorio][i]) {
+            resultado[i] = 2; // letra certa no lugar certo
+        } else {
+
+            for (int j = 0; j < 5; j++) {
+                if (descobrir[i] != '\0' && descobrir[i] == palavra[aleatorio][j]) {
+                    resultado[i] = 1;
+                    break;
+                }
+                else {
+                resultado[i] = 0;  // não existe
+            }
+            }
+
+        }
+    }
+}
+
 /*int main(){
     int linhas;
     int contador = 0;
