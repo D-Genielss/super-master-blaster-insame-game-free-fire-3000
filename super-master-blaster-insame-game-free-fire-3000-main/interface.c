@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>   
+#include "../include/teste.h"
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
@@ -11,6 +12,34 @@ typedef enum {
 } Tela_Jogo;
 
 void raylib(){
+
+    int linhas;
+    int aleatorio;
+    
+    FILE *arquivo = fopen("Palavras.csv","r");
+    if(!arquivo){
+        printf("Erro ao abrir o arquivo!\n");
+        exit(1);
+    }
+    linhas = ContaLinhas(arquivo);
+
+    char palavra[linhas][30];
+    char dica[linhas][30];
+
+    Juntar(arquivo, palavra, dica);
+    
+    fclose(arquivo);
+
+    char deniels[30];
+    sprintf(deniels, "%d", linhas);
+
+
+
+
+    aleatorio = Aleatorio(linhas);
+    printf("%s\n\n\n\n\n\n\n\n\n\n\n\n",palavra[aleatorio]);
+
+
     // Inicialização
     const int screenWidth = 1600;
     const int screenHeight = 900;
@@ -48,7 +77,10 @@ while (!WindowShouldClose()){
         ClearBackground(BLACK);
             
 //Menu Principal
-        DrawText("super-master-blaster-insame-game-Termo-3000",200,200,50 ,WHITE);           
+        DrawText(palavra[aleatorio-1],200,200,50 ,WHITE);      
+          DrawText(deniels,00,200,50 ,WHITE);  
+
+      
 
         //Botão Jogar
         DrawRectangle(X_Jogar,Y_Jogar,XL_jogar,YA_Jogar,DARKPURPLE);
