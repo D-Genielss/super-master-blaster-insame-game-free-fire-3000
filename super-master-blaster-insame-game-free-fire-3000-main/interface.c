@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>   
 #include "../include/teste.h"
+
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
@@ -23,22 +24,17 @@ void raylib(){
     }
     linhas = ContaLinhas(arquivo);
 
-    char palavra[linhas][30];
+    char todas_P[linhas][30];
     char dica[linhas][30];
 
-    Juntar(arquivo, palavra, dica);
+    Juntar(arquivo, todas_P, dica);
     
     fclose(arquivo);
 
     char deniels[30];
     sprintf(deniels, "%d", linhas);
 
-
-
-
     aleatorio = Aleatorio(linhas);
-    printf("%s\n\n\n\n\n\n\n\n\n\n\n\n",palavra[aleatorio]);
-
 
     // Inicialização
     const int screenWidth = 1600;
@@ -77,10 +73,8 @@ while (!WindowShouldClose()){
         ClearBackground(BLACK);
             
 //Menu Principal
-        DrawText(palavra[aleatorio-1],200,200,50 ,WHITE);      
-          DrawText(deniels,00,200,50 ,WHITE);  
-
-      
+        DrawText(todas_P[aleatorio-1],200,200,50 ,WHITE);      
+        DrawText(deniels,00,200,50 ,WHITE);  
 
         //Botão Jogar
         DrawRectangle(X_Jogar,Y_Jogar,XL_jogar,YA_Jogar,DARKPURPLE);
@@ -113,6 +107,7 @@ while (!WindowShouldClose()){
                 DrawText("DIFICULDADE 1",380,445,50 ,GREEN);
 //tela dificulade 1 /game facil                 
                 if(TelaD1 == true){
+                    
                         int tamanho = 0;
                         char Palavra[6];
                         Tela_Jogo TELA_MOMENTO = COLOCA_PALAVRA;
