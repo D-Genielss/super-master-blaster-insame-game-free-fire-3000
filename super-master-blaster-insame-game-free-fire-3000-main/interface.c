@@ -4,6 +4,11 @@
 #include <string.h>   
 #include "../include/teste.h"
 
+void DrawChar(char c, int posX, int posY, int fontSize, Color color) {
+    char text[2] = {c, '\0'};
+    DrawText(text, posX, posY, fontSize, color);
+}
+
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
@@ -107,7 +112,7 @@ while (!WindowShouldClose()){
                 DrawText("DIFICULDADE 1",380,445,50 ,GREEN);
 //tela dificulade 1 /game facil                 
                 if(TelaD1 == true){
-                    
+
                         int tamanho = 0;
                         char Palavra[6];
                         Tela_Jogo TELA_MOMENTO = COLOCA_PALAVRA;
@@ -147,10 +152,31 @@ while (!WindowShouldClose()){
 
                                 case COLOCA_PALAVRA:{
 
+                                    int PositionY = 0;
+                                    int PositionX = 350;
+
+
                                     ClearBackground(BLACK);
-                                    DrawText("JOGO DIFICULDADE 1",450,200,50 ,GREEN);
-                                    DrawText(Palavra, 460, 400, 40, GREEN);
-                                    DrawRectangle(450, 540, 200, 2, GREEN);
+                                    DrawText("JOGO DIFICULDADE 1",450,0,50 ,GREEN);
+
+                                    for(int i = 0;i < 6; i++){
+                                        PositionY = PositionY + 130;
+                                        PositionX = 22;                                      
+                                        for(int i = 0;i < 5; i++){   
+                                            PositionX = PositionX + 150;                                       
+                                            DrawRectangle(PositionX ,PositionY , 100, 120, GRAY);
+                                        }
+                                                                              
+                                    }
+                                    DrawChar(Palavra[0], PositionX, PositionY, 80, GREEN);
+                                 
+                                    DrawChar(Palavra[1], (PositionX+150), PositionY, 80, GREEN);
+                                    
+                                    DrawChar(Palavra[2], (PositionX +300), PositionY, 80, GREEN);
+                                    
+                                    DrawChar(Palavra[3], (PositionX +450), PositionY, 80, GREEN);
+
+                                    DrawChar(Palavra[4], (PositionX +600), PositionY, 80, GREEN);
 
                                 }break;
 

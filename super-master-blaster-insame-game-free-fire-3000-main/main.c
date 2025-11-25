@@ -7,7 +7,7 @@
 #include "../include/teste.h"
 
 int main(void) {
-    //raylib();
-    Menu_Cadastro();  // ✅ chamada correta
+    raylib();
+    //Menu_Cadastro();  // ✅ chamada correta
     return 0;
 }
