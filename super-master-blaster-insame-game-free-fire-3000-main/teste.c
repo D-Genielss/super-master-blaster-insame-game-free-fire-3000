@@ -41,6 +41,9 @@ int comparar(char descobrir[6], char palavra[][6], int linhas) {
 }
 
 
+
+void compararLetras(char palavra[][6], int aleatorio, char descobrir[6], int resultado[5]) {
+
     for (int i = 0; i < 5; i++) {
         if (descobrir[i] == palavra[aleatorio][i]) {
             resultado[i] = 2; // letra certa no lugar certo
