@@ -126,9 +126,15 @@ while (!WindowShouldClose()){
 
                                 ClearBackground(BLACK);
 
-                                DrawText("Victoria",450,50,50 ,RED);
+                                DrawText("Victoria",450,50,50 ,GREEN);
 
                                 EndDrawing();
+
+                                if(!WindowShouldClose()){
+                                    TelaVictory = false;
+                                    TelaD1 = false;
+                                    TelaComecar = true;
+                                }
 
                             }
                         }//tela vitoria 
@@ -152,12 +158,13 @@ while (!WindowShouldClose()){
                                if (IsKeyPressed(KEY_ENTER)){
                                     TELA_MOMENTO = TELA_GAME_RODANDO;
                                 }
+
                                                    
                             }break;
                             case TELA_GAME_RODANDO:{
                                 
                                 bool Compara = comparar(Palavra,todas_P,linhas);
-                                int resultado[5];          
+                                int resultado[5];   
                                 
                                 if(Compara == false){
                                     
@@ -178,6 +185,11 @@ while (!WindowShouldClose()){
                                                 if(resultado[3] == 2){
                                                     if(resultado[4] == 2){
                                                         TelaVictory = true;
+                                                        for(int i = 0;i < 6; i++){ 
+                                                            tamanho--;
+                                                            Palavra[i] = '\0'; 
+                                                        }
+
                                                     }else{
                                                         tentativa ++;
                                                         TELA_MOMENTO = COLOCA_PALAVRA;
@@ -223,17 +235,17 @@ while (!WindowShouldClose()){
                                             DrawRectangle(PositionX ,PositionY , 100, 100, GRAY);
                                         }                                                                              
                                     }
-                                    PositionX = 350;
-
-                                    DrawChar(Palavra[0], PositionX, PositionY, 80, GREEN);
+                                    PositionX = 500;
+                                    PositionY = 160;
+                                    DrawChar(Palavra[0], PositionX, PositionY, 80, WHITE);
                                  
-                                    DrawChar(Palavra[1], (PositionX+150), PositionY, 80, GREEN);
+                                    DrawChar(Palavra[1], (PositionX+150), PositionY, 80, WHITE);
                                     
-                                    DrawChar(Palavra[2], (PositionX +300), PositionY, 80, GREEN);
+                                    DrawChar(Palavra[2], (PositionX +300), PositionY, 80, WHITE);
                                     
-                                    DrawChar(Palavra[3], (PositionX +450), PositionY, 80, GREEN);
+                                    DrawChar(Palavra[3], (PositionX +450), PositionY, 80, WHITE);
 
-                                    DrawChar(Palavra[4], (PositionX +600), PositionY, 80, GREEN);
+                                    DrawChar(Palavra[4], (PositionX +600), PositionY, 80, WHITE);
 
                                 }break;
 
