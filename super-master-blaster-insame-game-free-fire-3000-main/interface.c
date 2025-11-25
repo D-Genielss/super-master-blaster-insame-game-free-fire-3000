@@ -79,7 +79,7 @@ while (!WindowShouldClose()){
             
 //Menu Principal
         DrawText(todas_P[aleatorio-1],200,200,50 ,WHITE);      
-        DrawText(deniels,00,200,50 ,WHITE);  
+        DrawText(deniels,800,200,50 ,WHITE);  
 
         //Botão Jogar
         DrawRectangle(X_Jogar,Y_Jogar,XL_jogar,YA_Jogar,DARKPURPLE);
@@ -112,13 +112,26 @@ while (!WindowShouldClose()){
                 DrawText("DIFICULDADE 1",380,445,50 ,GREEN);
 //tela dificulade 1 /game facil                 
                 if(TelaD1 == true){
-
+                        bool TelaVictory = false;
                         int tamanho = 0;
                         char Palavra[6];
+                        int tentativa = 0;
                         Tela_Jogo TELA_MOMENTO = COLOCA_PALAVRA;
                
                     while(!WindowShouldClose()){                 
-                        
+                        if(TelaVictory == true){
+                            while(!WindowShouldClose()){
+
+                                BeginDrawing();
+
+                                ClearBackground(BLACK);
+
+                                DrawText("Victoria",450,50,50 ,RED);
+
+                                EndDrawing();
+
+                            }
+                        }//tela vitoria 
                         switch(TELA_MOMENTO){
                             
                             case COLOCA_PALAVRA:{
@@ -143,6 +156,50 @@ while (!WindowShouldClose()){
                             }break;
                             case TELA_GAME_RODANDO:{
                                 
+                                bool Compara = comparar(Palavra,todas_P,linhas);
+                                int resultado[5];          
+                                
+                                if(Compara == false){
+                                    
+                                    for(int i = 0;i < 6; i++){ 
+                                        tamanho--;
+                                        Palavra[i] = '\0'; 
+                                    }
+                                    TELA_MOMENTO = COLOCA_PALAVRA;
+
+                                }else{
+                                    
+                                    compararLetras(todas_P,aleatorio -1,Palavra,resultado);
+                                    
+                                    if(resultado[0] == 2){
+                                        printf("%d\n\n\n\n\n\n\n%s,%s\n\n\n\n\n\n\n\n",resultado[0],Palavra,todas_P[aleatorio-1]);
+                                        if(resultado[1] == 2){
+                                            if(resultado[2] == 2){
+                                                if(resultado[3] == 2){
+                                                    if(resultado[4] == 2){
+                                                        TelaVictory = true;
+                                                    }else{
+                                                        tentativa ++;
+                                                        TELA_MOMENTO = COLOCA_PALAVRA;
+                                                    }//else 5 letra
+                                                }else{
+                                                    tentativa ++;
+                                                    TELA_MOMENTO = COLOCA_PALAVRA;
+                                                }//else 4 letra
+                                            }else{
+                                                tentativa ++;
+                                                TELA_MOMENTO = COLOCA_PALAVRA;
+                                            }//else 3 letra
+                                        }else{
+                                            tentativa ++;
+                                            TELA_MOMENTO = COLOCA_PALAVRA;
+                                        }//else 2 letra
+                                    }else{
+                                        tentativa ++;
+                                        TELA_MOMENTO = COLOCA_PALAVRA;
+                                    }//else 1 letra
+                                }
+                                
                             } break;
                             default: break;
                         }
@@ -152,22 +209,22 @@ while (!WindowShouldClose()){
 
                                 case COLOCA_PALAVRA:{
 
-                                    int PositionY = 0;
+                                    int PositionY = 50;
                                     int PositionX = 350;
 
-
                                     ClearBackground(BLACK);
-                                    DrawText("JOGO DIFICULDADE 1",450,0,50 ,GREEN);
+                                    DrawText("JOGO DIFICULDADE 1",450,50,50 ,GREEN);
 
                                     for(int i = 0;i < 6; i++){
-                                        PositionY = PositionY + 130;
-                                        PositionX = 22;                                      
+                                        PositionY = PositionY + 110;
+                                        PositionX = 325;                                      
                                         for(int i = 0;i < 5; i++){   
                                             PositionX = PositionX + 150;                                       
-                                            DrawRectangle(PositionX ,PositionY , 100, 120, GRAY);
-                                        }
-                                                                              
+                                            DrawRectangle(PositionX ,PositionY , 100, 100, GRAY);
+                                        }                                                                              
                                     }
+                                    PositionX = 350;
+
                                     DrawChar(Palavra[0], PositionX, PositionY, 80, GREEN);
                                  
                                     DrawChar(Palavra[1], (PositionX+150), PositionY, 80, GREEN);
