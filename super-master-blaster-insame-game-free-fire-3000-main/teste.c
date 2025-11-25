@@ -7,8 +7,10 @@ int ContaLinhas(FILE *arquivo){
     char c;
     int linhas = 0;
 
-    while ((c = fgetc(arquivo)) != EOF)
-        if (c == '\n') linhas++;
+    while ((c = fgetc(arquivo)) != EOF){
+        if (c == '\n') 
+        linhas++;
+    }
 
     fseek(arquivo, 0, SEEK_SET);
     return linhas;
@@ -20,23 +22,16 @@ int Aleatorio(int linhas){
 }
 
 
-void Procurar(char palavra[][30], char dica[][30]){
+void Juntar(FILE *arquivo, char palavra[][30], char dica[][30]){
     int contador = 0;
 
-    FILE *arquivo = fopen("../output/Palavras.csv","r");
-    if(!arquivo){
-        printf("Erro ao abrir o arquivo!\n");
-        exit(1);
-    }
-
-    while (fscanf(arquivo, "%[^,],%[^,],%*s\n", palavra[contador], dica[contador]) == 2) {
+    while (fscanf(arquivo, "%[^,],%[^,],%*s\n", palavra[contador], dica[contador]) != EOF) {
         contador++;
     }
 
-    fclose(arquivo);
 }
 
-int main(){
+/*int main(){
     int linhas;
     int contador = 0;
     int aleatorio;
@@ -48,12 +43,12 @@ int main(){
     }
 
     linhas = ContaLinhas(arquivo);
-    fclose(arquivo);
 
     char palavra[linhas][30];
     char dica[linhas][30];
 
-    Procurar(palavra, dica);
+    Procurar(arquivo, palavra, dica);
+    fclose(arquivo);
 
     while (contador < linhas){
         printf("%s, %s\n", palavra[contador], dica[contador]);
@@ -64,5 +59,7 @@ int main(){
     printf("%d",aleatorio);
         printf("%d",linhas);
 
+        printf("\n%s\n", palavra[aleatorio-1]);
+
     return 0;
-}
+}*/
