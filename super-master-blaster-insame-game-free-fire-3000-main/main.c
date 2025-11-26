@@ -6,7 +6,7 @@
 #include "interface.h"
 
 int main(void) {
+    Menu_Cadastro();  // ✅ chamada correta
     raylib();
-    //Menu_Cadastro();  // ✅ chamada correta
     return 0;
 }
