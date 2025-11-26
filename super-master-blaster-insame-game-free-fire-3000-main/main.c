@@ -4,7 +4,6 @@
 #include <string.h>
 #include <ctype.h>
 #include "interface.h"
-#include "../include/teste.h"
 
 int main(void) {
     raylib();

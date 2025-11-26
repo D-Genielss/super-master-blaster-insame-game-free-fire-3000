@@ -15,7 +15,8 @@ void DrawChar(char c, int posX, int posY, int fontSize, Color color) {
 //------------------------------------------------------------------------------------
 typedef enum {
     COLOCA_PALAVRA,
-    TELA_GAME_RODANDO
+    TELA_GAME_RODANDO,
+    TELA_FORA_GAME
 } Tela_Jogo;
 
 // FUNÇÕES INCLUÍDAS
@@ -192,6 +193,7 @@ while (!WindowShouldClose()){
                                     TelaVictory = false;
                                     TelaD1 = false;
                                     TelaComecar = true;
+                                    TELA_MOMENTO = TELA_FORA_GAME;
                                 }
 
                             }
@@ -237,11 +239,10 @@ while (!WindowShouldClose()){
                                     TELA_MOMENTO = COLOCA_PALAVRA;
 
                                 }else{
-                                    
+
                                     compararLetras(todas_P,aleatorio -1,Palavra,resultado);
                                     
                                     if(resultado[0] == 2){
-                                        printf("%d\n\n\n\n\n\n\n%s,%s\n\n\n\n\n\n\n\n",resultado[0],Palavra,todas_P[aleatorio-1]);
                                         if(resultado[1] == 2){
                                             if(resultado[2] == 2){
                                                 if(resultado[3] == 2){
@@ -278,36 +279,30 @@ while (!WindowShouldClose()){
                             default: break;
                         }
 //switch tela game
+                            //variavel para as cores
+                            Color estado[5] = {GRAY,GRAY,GRAY,RED,GRAY};
                         BeginDrawing();
                             switch(TELA_MOMENTO){
 
                                 case COLOCA_PALAVRA:{
 
-                                    int PositionY = 50;
-                                    int PositionX = 350;
-
                                     ClearBackground(BLACK);
-                                    DrawText("JOGO DIFICULDADE 1",450,50,50 ,GREEN);
+                                    DrawText("JOGO DIFICULDADE 1",450,50,50 ,GREEN);            
 
-                                    for(int i = 0;i < 6; i++){
-                                        PositionY = PositionY + 110;
-                                        PositionX = 325;                                      
-                                        for(int i = 0;i < 5; i++){   
-                                            PositionX = PositionX + 150;                                       
-                                            DrawRectangle(PositionX ,PositionY , 100, 100, GRAY);
-                                        }                                                                              
-                                    }
-                                    PositionX = 500;
-                                    PositionY = 160;
-                                    DrawChar(Palavra[0], PositionX, PositionY, 80, WHITE);
-                                 
-                                    DrawChar(Palavra[1], (PositionX+150), PositionY, 80, WHITE);
-                                    
-                                    DrawChar(Palavra[2], (PositionX +300), PositionY, 80, WHITE);
-                                    
-                                    DrawChar(Palavra[3], (PositionX +450), PositionY, 80, WHITE);
+                                    int PositionY = 230;
+                                    int PositionX = 500;
 
-                                    DrawChar(Palavra[4], (PositionX +600), PositionY, 80, WHITE);
+                                    DrawRectangle(PositionX,PositionY,100,120,estado[0]);
+                                    DrawRectangle(PositionX+150,PositionY,100,120,estado[1]);
+                                    DrawRectangle(PositionX+300,PositionY,100,120,estado[2]);
+                                    DrawRectangle(PositionX+450,PositionY,100,120,estado[3]);
+                                    DrawRectangle(PositionX+600,PositionY,100,120,estado[4]);
+
+                                    DrawChar(Palavra[0], PositionX+20, PositionY, 80, WHITE);
+                                    DrawChar(Palavra[1], (PositionX+170), PositionY, 80, WHITE);
+                                    DrawChar(Palavra[2], (PositionX +320), PositionY, 80, WHITE);
+                                    DrawChar(Palavra[3], (PositionX +470), PositionY, 80, WHITE);
+                                    DrawChar(Palavra[4], (PositionX +620), PositionY, 80, WHITE);
 
                                 }break;
 

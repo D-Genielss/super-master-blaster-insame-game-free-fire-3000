@@ -299,7 +299,7 @@ void Exportar_Arquivo(Pergunta Lista[], size_t Tamanho) {
         exit(1);
     }
 
-    fprintf(arquivo, "Palavra,Dica,Dificuldade\n");
+    //fprintf(arquivo, "Palavra,Dica,Dificuldade\n");
     for (size_t i = 0; i < Tamanho; i++) {
         fprintf(arquivo, "%s,%s,%d\n", Lista[i].palavra, Lista[i].dica, Lista[i].dificuldade);
     }

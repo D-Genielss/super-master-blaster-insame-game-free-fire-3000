@@ -1,7 +1,0 @@
-if (IsKeyPressed(KEY_ENTER)){
-    // CONVERTE A PALAVRA INTEIRA PARA MAIÚSCULO APÓS O ENTER
-    for(int i = 0; i < tamanho; i++) {
-        Palavra[i] = toupper(Palavra[i]);
-    }
-    TELA_MOMENTO = TELA_GAME_RODANDO;
-}
