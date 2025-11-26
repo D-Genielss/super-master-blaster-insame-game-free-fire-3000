@@ -14,11 +14,13 @@ void DrawChar(char c, int posX, int posY, int fontSize, Color color) {
 // Program main entry point
 //------------------------------------------------------------------------------------
 typedef enum {
-    COLOCA_PALAVRA,
-    TELA_GAME_RODANDO,
-    TELA_VICTORY,
-    TELA_GAME_OVER
-} Tela_Jogo;
+    MENU_PRINCIPAL,
+    SELECAO_DIFICULDADE,
+    JOGO_D1,
+    JOGO_D2,
+    VICTORY,
+    GAME_OVER
+} Tela_Atual;
 
 // FUNÇÕES
 int ContaLinhas(FILE *arquivo){
@@ -98,25 +100,22 @@ void raylib() {
     InitWindow(screenWidth, screenHeight, "TERMO 1.0 ");
     SetTargetFPS(60);
 
-    // Variáveis do jogo
-    bool TelaComecar = false;
-    bool TelaD1 = false;
-    bool TelaD2 = false;
+    // Estado do jogo
+    Tela_Atual telaAtual = MENU_PRINCIPAL;
     
     //Botões
     Rectangle B_jogar = {(screenWidth/2)-200, 400, 400, 80};
     Rectangle B_D1 = {360, 410, 440, 120};
     Rectangle B_D2 = {860, 410, 440, 120};
+    Rectangle B_voltar = {50, 50, 200, 60}; // Botão voltar
 
     // Variáveis do jogo principal
     char Palavra[6] = ""; // Palavra atual
     int tamanho = 0;
     int tentativa = 0;
-    int maxTentativas = 6; // Padrão para D1
+    int maxTentativas = 6;
     int resultados[6][5] = {0}; // Resultados para todas as tentativas
     char palavrasTentadas[6][6] = {0}; // Palavras tentadas
-    Tela_Jogo TELA_MOMENTO = COLOCA_PALAVRA;
-    bool jogoAtivo = false;
 
     // Loop principal do jogo
     while (!WindowShouldClose()) {
@@ -124,104 +123,96 @@ void raylib() {
         Vector2 mousePosition = GetMousePosition();
         
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-            if (!TelaComecar && CheckCollisionPointRec(mousePosition, B_jogar)) {
-                TelaComecar = true;
-            }
-            
-            if (TelaComecar && !jogoAtivo) {
-                if (CheckCollisionPointRec(mousePosition, B_D1)) {
-                    TelaD1 = true;
-                    TelaD2 = false;
-                    jogoAtivo = true;
-                    maxTentativas = 6; // Dificuldade 1: 6 tentativas
-                    // Resetar jogo
-                    strcpy(Palavra, "");
-                    tamanho = 0;
-                    tentativa = 0;
-                    memset(resultados, 0, sizeof(resultados));
-                    memset(palavrasTentadas, 0, sizeof(palavrasTentadas));
-                    TELA_MOMENTO = COLOCA_PALAVRA;
-                    aleatorio = Aleatorio(linhas);
-                }
-                if (CheckCollisionPointRec(mousePosition, B_D2)) {
-                    TelaD2 = true;
-                    TelaD1 = false;
-                    jogoAtivo = true;
-                    maxTentativas = 4; // Dificuldade 2: 4 tentativas
-                    // Resetar jogo
-                    strcpy(Palavra, "");
-                    tamanho = 0;
-                    tentativa = 0;
-                    memset(resultados, 0, sizeof(resultados));
-                    memset(palavrasTentadas, 0, sizeof(palavrasTentadas));
-                    TELA_MOMENTO = COLOCA_PALAVRA;
-                    aleatorio = Aleatorio(linhas);
-                }
+            switch(telaAtual) {
+                case MENU_PRINCIPAL:
+                    if (CheckCollisionPointRec(mousePosition, B_jogar)) {
+                        telaAtual = SELECAO_DIFICULDADE;
+                    }
+                    break;
+                    
+                case SELECAO_DIFICULDADE:
+                    if (CheckCollisionPointRec(mousePosition, B_D1)) {
+                        telaAtual = JOGO_D1;
+                        maxTentativas = 6;
+                        // Resetar jogo
+                        strcpy(Palavra, "");
+                        tamanho = 0;
+                        tentativa = 0;
+                        memset(resultados, 0, sizeof(resultados));
+                        memset(palavrasTentadas, 0, sizeof(palavrasTentadas));
+                        aleatorio = Aleatorio(linhas);
+                    }
+                    if (CheckCollisionPointRec(mousePosition, B_D2)) {
+                        telaAtual = JOGO_D2;
+                        maxTentativas = 4;
+                        // Resetar jogo
+                        strcpy(Palavra, "");
+                        tamanho = 0;
+                        tentativa = 0;
+                        memset(resultados, 0, sizeof(resultados));
+                        memset(palavrasTentadas, 0, sizeof(palavrasTentadas));
+                        aleatorio = Aleatorio(linhas);
+                    }
+                    if (CheckCollisionPointRec(mousePosition, B_voltar)) {
+                        telaAtual = MENU_PRINCIPAL;
+                    }
+                    break;
+                    
+                case VICTORY:
+                case GAME_OVER:
+                    if (CheckCollisionPointRec(mousePosition, B_voltar)) {
+                        telaAtual = SELECAO_DIFICULDADE;
+                    }
+                    break;
+                    
+                default:
+                    break;
             }
         }
 
         // Lógica do jogo quando ativo
-        if (jogoAtivo && (TelaD1 || TelaD2)) {
-            switch(TELA_MOMENTO) {
-                case COLOCA_PALAVRA: {
-                    int key = GetCharPressed();
-                    if ((key >= 32) && (key <= 125) && (tamanho < 5)) {
-                        Palavra[tamanho] = (char)key;
-                        Palavra[tamanho + 1] = '\0';
-                        tamanho++;
-                    }
-                    if (IsKeyPressed(KEY_BACKSPACE) && tamanho > 0) {
-                        tamanho--;
-                        Palavra[tamanho] = '\0';
-                    }
-                    if (IsKeyPressed(KEY_ENTER) && tamanho == 5) {
-                        // Converter para maiúsculo
-                        for (int i = 0; i < tamanho; i++) {
-                            Palavra[i] = toupper(Palavra[i]);
-                        }
-                        
-                        if (comparar(Palavra, todas_P, linhas)) {
-                            strcpy(palavrasTentadas[tentativa], Palavra);
-                            compararLetras(todas_P, aleatorio, Palavra, resultados[tentativa]);
-                            
-                            if (verificarVitoria(resultados[tentativa])) {
-                                TELA_MOMENTO = TELA_VICTORY;
-                            } else {
-                                tentativa++;
-                                if (tentativa >= maxTentativas) {
-                                    TELA_MOMENTO = TELA_GAME_OVER;
-                                } else {
-                                    // Prepara para próxima tentativa
-                                    strcpy(Palavra, "");
-                                    tamanho = 0;
-                                }
-                            }
+        if (telaAtual == JOGO_D1 || telaAtual == JOGO_D2) {
+            int key = GetCharPressed();
+            if ((key >= 32) && (key <= 125) && (tamanho < 5)) {
+                Palavra[tamanho] = (char)key;
+                Palavra[tamanho + 1] = '\0';
+                tamanho++;
+            }
+            if (IsKeyPressed(KEY_BACKSPACE) && tamanho > 0) {
+                tamanho--;
+                Palavra[tamanho] = '\0';
+            }
+            if (IsKeyPressed(KEY_ENTER) && tamanho == 5) {
+                // Converter para maiúsculo
+                for (int i = 0; i < tamanho; i++) {
+                    Palavra[i] = toupper(Palavra[i]);
+                }
+                
+                if (comparar(Palavra, todas_P, linhas)) {
+                    strcpy(palavrasTentadas[tentativa], Palavra);
+                    compararLetras(todas_P, aleatorio, Palavra, resultados[tentativa]);
+                    
+                    if (verificarVitoria(resultados[tentativa])) {
+                        telaAtual = VICTORY;
+                    } else {
+                        tentativa++;
+                        if (tentativa >= maxTentativas) {
+                            telaAtual = GAME_OVER;
                         } else {
-                            // Palavra não existe no dicionário
-                            // Você pode mostrar uma mensagem de erro aqui
+                            // Prepara para próxima tentativa
+                            strcpy(Palavra, "");
+                            tamanho = 0;
                         }
                     }
-                } break;
-                
-                case TELA_VICTORY: {
-                    if (IsKeyPressed(KEY_ENTER)) {
-                        jogoAtivo = false;
-                        TelaD1 = false;
-                        TelaD2 = false;
-                        TelaComecar = true;
-                    }
-                } break;
-                
-                case TELA_GAME_OVER: {
-                    if (IsKeyPressed(KEY_ENTER)) {
-                        jogoAtivo = false;
-                        TelaD1 = false;
-                        TelaD2 = false;
-                        TelaComecar = true;
-                    }
-                } break;
-                
-                default: break;
+                } else {
+                    // Palavra não existe no dicionário
+                    // Você pode mostrar uma mensagem de erro aqui
+                }
+            }
+            
+            // Botão voltar durante o jogo
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionPointRec(mousePosition, B_voltar)) {
+                telaAtual = SELECAO_DIFICULDADE;
             }
         }
 
@@ -229,110 +220,124 @@ void raylib() {
         BeginDrawing();
         ClearBackground(BLACK);
 
-        if (!TelaComecar) {
-            // Menu Principal
-            DrawText("TERMO", screenWidth/2 - 100, 200, 60, WHITE);
-            DrawRectangleRec(B_jogar, DARKPURPLE);
-            DrawText("Iniciar", B_jogar.x + 150, B_jogar.y + 20, 40, WHITE);
-        } else if (!jogoAtivo) {
-            // Tela de seleção de dificuldade
-            DrawText("ESCOLHA A DIFICULDADE", 450, 200, 50, WHITE);
-            
-            // Dificuldade 1
-            DrawRectangleRec(B_D1, GREEN);
-            DrawRectangle(B_D1.x + 10, B_D1.y + 10, B_D1.width - 20, B_D1.height - 20, BLACK);
-            DrawText("DIFICULDADE 1", B_D1.x + 20, B_D1.y + 45, 40, GREEN);
-            DrawText("6 TENTATIVAS", B_D1.x + 20, B_D1.y + 85, 25, GREEN);
-            
-            // Dificuldade 2
-            DrawRectangleRec(B_D2, YELLOW);
-            DrawRectangle(B_D2.x + 10, B_D2.y + 10, B_D2.width - 20, B_D2.height - 20, BLACK);
-            DrawText("DIFICULDADE 2", B_D2.x + 20, B_D2.y + 45, 40, YELLOW);
-            DrawText("4 TENTATIVAS", B_D2.x + 20, B_D2.y + 85, 25, YELLOW);
-        } else if (TelaD1) {
-            // Jogo ativo - Dificuldade 1
-            DrawText("JOGO DIFICULDADE 1 - 6 TENTATIVAS", 350, 50, 40, GREEN);
-            
-            // Desenhar tentativas anteriores
-            for (int t = 0; t < tentativa; t++) {
-                int PositionY = 150 + t * 130;
-                for (int i = 0; i < 5; i++) {
-                    int PositionX = 500 + i * 150;
-                    Color cor;
-                    switch (resultados[t][i]) {
-                        case 0: cor = GRAY; break;
-                        case 1: cor = YELLOW; break;
-                        case 2: cor = GREEN; break;
-                        default: cor = GRAY; break;
-                    }
-                    DrawRectangle(PositionX, PositionY, 100, 120, cor);
-                    DrawChar(palavrasTentadas[t][i], PositionX + 20, PositionY, 80, WHITE);
-                }
-            }
-            
-            // Desenhar tentativa atual
-            if (TELA_MOMENTO == COLOCA_PALAVRA && tentativa < maxTentativas) {
-                int PositionY = 150 + tentativa * 130;
-                for (int i = 0; i < 5; i++) {
-                    int PositionX = 500 + i * 150;
-                    DrawRectangle(PositionX, PositionY, 100, 120, DARKGRAY);
-                    if (i < tamanho) {
-                        DrawChar(Palavra[i], PositionX + 20, PositionY, 80, WHITE);
+        switch(telaAtual) {
+            case MENU_PRINCIPAL:
+                DrawText("SUPER-MASTER-BLASTER-INSANE-GAME-FREE-FIRE-3000", screenWidth/2 - 500, 200, 40, WHITE);
+                DrawRectangleRec(B_jogar, DARKPURPLE);
+                DrawText("Iniciar", B_jogar.x + 150, B_jogar.y + 20, 40, WHITE);
+                break;
+                
+            case SELECAO_DIFICULDADE:
+                DrawText("ESCOLHA A DIFICULDADE", 450, 200, 50, WHITE);
+                
+                // Dificuldade 1
+                DrawRectangleRec(B_D1, GREEN);
+                DrawRectangle(B_D1.x + 10, B_D1.y + 10, B_D1.width - 20, B_D1.height - 20, BLACK);
+                DrawText("DIFICULDADE 1", B_D1.x + 20, B_D1.y + 45, 40, GREEN);
+                DrawText("6 TENTATIVAS", B_D1.x + 20, B_D1.y + 85, 25, GREEN);
+                
+                // Dificuldade 2
+                DrawRectangleRec(B_D2, YELLOW);
+                DrawRectangle(B_D2.x + 10, B_D2.y + 10, B_D2.width - 20, B_D2.height - 20, BLACK);
+                DrawText("DIFICULDADE 2", B_D2.x + 20, B_D2.y + 45, 40, YELLOW);
+                DrawText("4 TENTATIVAS", B_D2.x + 20, B_D2.y + 85, 25, YELLOW);
+                
+                // Botão voltar
+                DrawRectangleRec(B_voltar, RED);
+                DrawText("Voltar", B_voltar.x + 50, B_voltar.y + 15, 30, WHITE);
+                break;
+                
+            case JOGO_D1:
+                DrawText("JOGO DIFICULDADE 1 - 6 TENTATIVAS", 350, 50, 40, GREEN);
+                DrawText(TextFormat("Dica: %s", dica[aleatorio]), 100, 120, 25, GREEN);
+                DrawText("TODO 'space' TROCAR POR '_'", 100, 150, 25, GREEN);
+                
+                // Desenhar tentativas anteriores
+                for (int t = 0; t < tentativa; t++) {
+                    int PositionY = 150 + t * 130;
+                    for (int i = 0; i < 5; i++) {
+                        int PositionX = 500 + i * 150;
+                        Color cor;
+                        switch (resultados[t][i]) {
+                            case 0: cor = GRAY; break;
+                            case 1: cor = YELLOW; break;
+                            case 2: cor = GREEN; break;
+                            default: cor = GRAY; break;
+                        }
+                        DrawRectangle(PositionX, PositionY, 100, 120, cor);
+                        DrawChar(palavrasTentadas[t][i], PositionX + 20, PositionY, 80, WHITE);
                     }
                 }
-            }
-            
-            // Telas de estado
-            if (TELA_MOMENTO == TELA_VICTORY) {
-                DrawText("VITÓRIA!", screenWidth/2 - 100, 700, 60, GREEN);
-                DrawText("Pressione ENTER para voltar", screenWidth/2 - 200, 780, 30, WHITE);
-            } else if (TELA_MOMENTO == TELA_GAME_OVER) {
-                DrawText("GAME OVER!", screenWidth/2 - 120, 700, 60, RED);
-                DrawText(TextFormat("A palavra era: %s", todas_P[aleatorio]), screenWidth/2 - 150, 750, 30, WHITE);
-                DrawText("Pressione ENTER para voltar", screenWidth/2 - 200, 800, 30, WHITE);
-            }
-        } else if (TelaD2) {
-            // Jogo ativo - Dificuldade 2
-            DrawText("JOGO DIFICULDADE 2 - 4 TENTATIVAS", 350, 50, 40, YELLOW);
-            
-            // Desenhar tentativas anteriores
-            for (int t = 0; t < tentativa; t++) {
-                int PositionY = 200 + t * 130;
-                for (int i = 0; i < 5; i++) {
-                    int PositionX = 500 + i * 150;
-                    Color cor;
-                    switch (resultados[t][i]) {
-                        case 0: cor = GRAY; break;
-                        case 1: cor = YELLOW; break;
-                        case 2: cor = GREEN; break;
-                        default: cor = GRAY; break;
-                    }
-                    DrawRectangle(PositionX, PositionY, 100, 120, cor);
-                    DrawChar(palavrasTentadas[t][i], PositionX + 20, PositionY, 80, WHITE);
-                }
-            }
-            
-            // Desenhar tentativa atual
-            if (TELA_MOMENTO == COLOCA_PALAVRA && tentativa < maxTentativas) {
-                int PositionY = 200 + tentativa * 130;
-                for (int i = 0; i < 5; i++) {
-                    int PositionX = 500 + i * 150;
-                    DrawRectangle(PositionX, PositionY, 100, 120, DARKGRAY);
-                    if (i < tamanho) {
-                        DrawChar(Palavra[i], PositionX + 20, PositionY, 80, WHITE);
+                
+                // Desenhar tentativa atual
+                if (tentativa < maxTentativas) {
+                    int PositionY = 150 + tentativa * 130;
+                    for (int i = 0; i < 5; i++) {
+                        int PositionX = 500 + i * 150;
+                        DrawRectangle(PositionX, PositionY, 100, 120, DARKGRAY);
+                        if (i < tamanho) {
+                            DrawChar(Palavra[i], PositionX + 20, PositionY, 80, WHITE);
+                        }
                     }
                 }
-            }
-            
-            // Telas de estado
-            if (TELA_MOMENTO == TELA_VICTORY) {
-                DrawText("VITÓRIA!", screenWidth/2 - 100, 700, 60, GREEN);
-                DrawText("Pressione ENTER para voltar", screenWidth/2 - 200, 780, 30, WHITE);
-            } else if (TELA_MOMENTO == TELA_GAME_OVER) {
-                DrawText("GAME OVER!", screenWidth/2 - 120, 700, 60, RED);
-                DrawText(TextFormat("A palavra era: %s", todas_P[aleatorio]), screenWidth/2 - 150, 750, 30, WHITE);
-                DrawText("Pressione ENTER para voltar", screenWidth/2 - 200, 800, 30, WHITE);
-            }
+                
+                // Botão voltar
+                DrawRectangleRec(B_voltar, RED);
+                DrawText("Voltar", B_voltar.x + 50, B_voltar.y + 15, 30, WHITE);
+                break;
+                
+            case JOGO_D2:
+                DrawText("JOGO DIFICULDADE 2 - 4 TENTATIVAS", 350, 50, 40, YELLOW);
+                DrawText("SEM DICA !", 100, 120, 25, YELLOW);
+                DrawText("TODO 'space' TROCAR POR '_'", 100, 150, 25, YELLOW);
+
+                // Desenhar tentativas anteriores
+                for (int t = 0; t < tentativa; t++) {
+                    int PositionY = 200 + t * 130;
+                    for (int i = 0; i < 5; i++) {
+                        int PositionX = 500 + i * 150;
+                        Color cor;
+                        switch (resultados[t][i]) {
+                            case 0: cor = GRAY; break;
+                            case 1: cor = YELLOW; break;
+                            case 2: cor = GREEN; break;
+                            default: cor = GRAY; break;
+                        }
+                        DrawRectangle(PositionX, PositionY, 100, 120, cor);
+                        DrawChar(palavrasTentadas[t][i], PositionX + 20, PositionY, 80, WHITE);
+                    }
+                }
+                
+                // Desenhar tentativa atual
+                if (tentativa < maxTentativas) {
+                    int PositionY = 200 + tentativa * 130;
+                    for (int i = 0; i < 5; i++) {
+                        int PositionX = 500 + i * 150;
+                        DrawRectangle(PositionX, PositionY, 100, 120, DARKGRAY);
+                        if (i < tamanho) {
+                            DrawChar(Palavra[i], PositionX + 20, PositionY, 80, WHITE);
+                        }
+                    }
+                }
+                
+                // Botão voltar
+                DrawRectangleRec(B_voltar, RED);
+                DrawText("Voltar", B_voltar.x + 50, B_voltar.y + 20, 30, WHITE);
+                break;
+                
+            case VICTORY:
+                DrawText("VITÓRIA!", screenWidth/2 - 100, 300, 60, GREEN);
+                DrawText(TextFormat("Palavra: %s", todas_P[aleatorio]), screenWidth/2 - 150, 400, 30, WHITE);
+                DrawRectangleRec(B_voltar, GREEN);
+                DrawText("Voltar ao Menu", B_voltar.x + 20, B_voltar.y + 20, 30, WHITE);
+                break;
+                
+            case GAME_OVER:
+                DrawText("GAME OVER!", screenWidth/2 - 120, 300, 60, RED);
+                DrawText(TextFormat("A palavra era: %s", todas_P[aleatorio]), screenWidth/2 - 150, 400, 30, WHITE);
+                DrawRectangleRec(B_voltar, RED);
+                DrawText("Voltar ao Menu", B_voltar.x + 20, B_voltar.y + 20, 30, WHITE);
+                break;
         }
 
         EndDrawing();
