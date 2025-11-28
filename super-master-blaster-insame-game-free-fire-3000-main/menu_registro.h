@@ -22,5 +22,6 @@ void Exportar_Arquivo(Pergunta Lista[], size_t Tamanho);
 void Exportar_Por_Dificuldade(Pergunta Lista[], size_t Tamanho);
 int ContaLinhas(FILE *arquivo);
 void Procurar(char palavra[], char dica[]);
+void Carregar_Palavras_Predefinidas(Pergunta **Lista, size_t *Tamanho);
 
 #endif // MENU_REGISTRO_H
