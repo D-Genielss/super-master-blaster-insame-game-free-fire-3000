@@ -4,6 +4,112 @@
 #include <ctype.h>
 #include "menu_registro.h"
 
+// Array com as palavras pré-definidas
+Pergunta palavras_predefinidas[] = {
+    {"CLASH", "Reis e Princesas", 1},
+    {"SONIC", "pelado e de tenis", 1},
+    {"MARIO", "encanador", 1},
+    {"HADES", "inferno", 1},
+    {"TRUCO", "3.6.9.12...", 1},
+    {"ZELDA", "cocirijungle", 1},
+    {"GOLFE", "bola no buraco", 1},
+    {"MINEC", "blocos quadrados", 1},
+    {"FORTN", "batalha real", 1},
+    {"POKEM", "monstros bolso", 1},
+    {"FIFA_", "futebol virtual", 1},
+    {"GTA_V", "crimes cidade", 1},
+    {"AMONG", "trapaça espacial", 1},
+    {"ROBLO", "jogos criativos", 1},
+    {"LEAGU", "5 contra 5", 1},
+    {"VALOR", "tiro tático", 1},
+    {"CANDY", "doces combinar", 1},
+    {"ANGRY", "passaros zangados", 1},
+    {"PUBG_", "battle royale", 1},
+    {"APEX_", "legends movimento", 1},
+    {"ROCKE", "carros futebol", 1},
+    {"SKYRI", "dragões frio", 1},
+    {"WITCH", "caçador branco", 1},
+    {"DARK_", "almas difíceis", 1},
+    {"RESID", "zumbis survival", 1},
+    {"FINAL", "fantasia rpg", 1},
+    {"STREE", "luta e golpes", 1},
+    {"MORTA", "fatalities sangue", 1},
+    {"ASSAS", "parkour história", 1},
+    {"SPIDE", "teias heroísmo", 1},
+    {"BATMA", "morcego milionário", 1},
+    {"DOOM_", "demônios espaço", 1},
+    {"GEARS", "serra elétrica", 1},
+    {"HALO_", "anel e chief", 1},
+    {"WORLD", "warcraft online", 1},
+    {"DIABO", "demonios loot", 1},
+    {"STARD", "fazenda paz", 1},
+    {"ANIMA", "cruzamento ilha", 1},
+    {"SIMPS", "família amarela", 1},
+    {"BRAWL", "estrelas luta", 1},
+    {"FREE_", "fogo mobile", 1},
+    {"FALL_", "obstáculos funny", 1},
+    {"KART_", "corrida cascas", 1},
+    {"SMASH", "irmãos luta", 1},
+    {"SPLAT", "tinta polvos", 1},
+    {"KIRBY", "rosa absorve", 1},
+    {"METRO", "caçadora espacial", 1},
+    {"DONKE", "gorila bananas", 1},
+    {"PACMA", "fantasma comer", 1},
+    {"TETRI", "blocos linha", 1},
+    {"PONG_", "primeiro jogo", 1},
+    {"SPACE", "invasores espaço", 1},
+    {"CONTRA", "konami code", 1},
+    {"CASTL", "vampiro castelo", 1},
+    {"MEGAM", "azul armas", 1},
+    {"CRASH", "bandicoot marsupial", 1},
+    {"SPYRO", "dragão fogo", 1},
+    {"TOMB_", "raider aventura", 1},
+    {"NEED_", "velocidade carros", 1},
+    {"FORZA", "simulação real", 1},
+    {"GRAN_", "turismo carros", 1},
+    {"SOUL_", "calibur espadas", 1},
+    {"TEKKE", "luta 3d famosa", 1},
+    {"DRAGO", "bolas dragão", 1},
+    {"NARUT", "shinobi folha", 1},
+    {"ONE_P", "piratas chapéu", 1},
+    {"DIGIM", "monstros digital", 1},
+    {"YU_GI", "oh cartas magia", 1},
+    {"PERSO", "máscaras social", 1},
+    {"KINGD", "chaves coração", 1},
+    {"BIO_S", "little sister", 1},
+    {"BORDE", "lands humor", 1},
+    {"FALLO", "abrigo nuclear", 1},
+    {"ELDER", "rola pergaminhos", 1},
+    {"DISHO", "corvo vingança", 1},
+    {"DEAD_", "space necromorfos", 1},
+    {"SILEN", "colina nevoeiro", 1},
+    {"LEFT_", "4 dead zumbis", 1},
+    {"TEAM_", "fortress chapéus", 1},
+    {"COUNT", "strike terroristas", 1},
+    {"DOTA_", "defesa antigas", 1},
+    {"CALL_", "duty guerra", 1},
+    {"OVERW", "atch heróis", 1},
+    {"UNO__", "cartas mudar cor", 1},
+    {"POKER", "apostas mãos", 1},
+    {"TAROT", "arcanos leitura", 1},
+    {"MAGIC", "cartas coleção", 1},
+    {"RUMMY", "formar trincas", 1},
+    {"GWENT", "jogo Witcher", 1},
+    {"SCOPA", "limpar a mesa", 1},
+    {"SKAT_", "jogo alemão", 1},
+    {"SET__", "padrões visuais", 1},
+    {"WAR__", "batalha com cartas", 1},
+    {"BANG_", "duelo faroeste", 1},
+    {"MILLE", "corrida de mil", 1},
+    {"TAKI_", "emparelhar cor", 1},
+    {"OMAHA", "variação do poker", 1},
+    {"TONK_", "baixar sua mão", 1},
+    {"WHIST", "vazas e par", 1},
+    {"SKULL", "blefe com flores", 1}
+};
+
+int total_palavras_predefinidas = sizeof(palavras_predefinidas) / sizeof(palavras_predefinidas[0]);
+
 int Menu_Cadastro() {
     Pergunta *Dados = NULL;   
     size_t Tamanho = 0;
@@ -19,6 +125,7 @@ int Menu_Cadastro() {
         printf("4 - Alterar palavra\n");
         printf("5 - Excluir palavra\n");
         printf("6 - Exportar arquivo\n");
+        printf("7 - Carregar Palavras Pré-definidas\n"); // Nova opção
         printf("0 - Sair\n");
         printf("Escolha: ");
         
@@ -57,6 +164,10 @@ int Menu_Cadastro() {
             case 6:
                 Exportar_Arquivo(Dados, Tamanho);
                 break;
+            case 7:
+                Carregar_Palavras_Predefinidas(&Dados, &Tamanho);
+                Salvar_Palavras(Dados, Tamanho);
+                break;
             case 0:
                 Salvar_Palavras(Dados, Tamanho);
                 printf("Saindo e salvando os dados...\n");
@@ -68,6 +179,47 @@ int Menu_Cadastro() {
 
     free(Dados);
     return (int)Tamanho;
+}
+
+// Nova função para carregar palavras pré-definidas
+void Carregar_Palavras_Predefinidas(Pergunta **Lista, size_t *Tamanho) {
+    printf("\nCarregando %d palavras pré-definidas...\n", total_palavras_predefinidas);
+    
+    // Verificar se já existem palavras para evitar duplicatas
+    int palavras_adicionadas = 0;
+    
+    for (int i = 0; i < total_palavras_predefinidas; i++) {
+        int palavra_existe = 0;
+        
+        // Verificar se a palavra já existe na lista atual
+        for (size_t j = 0; j < *Tamanho; j++) {
+            if (strcmp((*Lista)[j].palavra, palavras_predefinidas[i].palavra) == 0) {
+                palavra_existe = 1;
+                break;
+            }
+        }
+        
+        if (!palavra_existe) {
+            // Realocar memória para a nova palavra
+            Pergunta *nova_lista = realloc(*Lista, (*Tamanho + 1) * sizeof(Pergunta));
+            if (nova_lista == NULL) {
+                perror("Erro ao alocar memória");
+                return;
+            }
+            *Lista = nova_lista;
+            
+            // Adicionar a palavra pré-definida
+            strcpy((*Lista)[*Tamanho].palavra, palavras_predefinidas[i].palavra);
+            strcpy((*Lista)[*Tamanho].dica, palavras_predefinidas[i].dica);
+            (*Lista)[*Tamanho].dificuldade = palavras_predefinidas[i].dificuldade;
+            
+            (*Tamanho)++;
+            palavras_adicionadas++;
+        }
+    }
+    
+    printf("%d novas palavras adicionadas!\n", palavras_adicionadas);
+    printf("Total de palavras na lista: %zu\n", *Tamanho);
 }
 
 void Adicionar_Palavra(Pergunta **Lista, size_t *Tamanho) {
@@ -161,6 +313,21 @@ void Alterar_Palavra(Pergunta *Lista, size_t Tamanho) {
 
     int indice = Pesquisar_Palavra(Lista, Tamanho, busca);
     if (indice == -1) return;
+
+    printf("Tem certeza que deseja alterar '%s'? (s/n): ", (Lista)[indice].palavra);
+    char confirmacao;
+    scanf(" %c", &confirmacao);
+    getchar();
+    
+    if (confirmacao != 's' && confirmacao != 'S') {
+        printf("Alteração cancelada.\n");
+        return;
+    }
+
+    printf("Digite a alteração da palavra: ");
+    fgets(Lista[indice].palavra, sizeof(Lista[indice].palavra), stdin);
+    Lista[indice].palavra[strcspn(Lista[indice].palavra, "\n")] = '\0';
+    Converte_Maiusculo(Lista[indice].palavra);
 
     printf("Digite a nova dica: ");
     fgets(Lista[indice].dica, sizeof(Lista[indice].dica), stdin);
@@ -350,5 +517,5 @@ void Exportar_Por_Dificuldade(Pergunta Lista[], size_t Tamanho) {
 
     printf("Arquivos por dificuldade criados com sucesso!\n");
     printf("- Palavras_Dificuldade1.csv: %d palavras (dificuldade 1, até 5 letras)\n", count_dificuldade1);
-    printf("- Palavras_Dificuldade2.csv: %d palavras (dificuldade 2, até 9 letras)\n", count_dificuldade2);
+    //printf("- Palavras_Dificuldade2.csv: %d palavras (dificuldade 2, até 9 letras)\n", count_dificuldade2);
 }
